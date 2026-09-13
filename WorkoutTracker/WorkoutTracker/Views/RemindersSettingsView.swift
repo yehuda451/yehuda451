@@ -13,12 +13,7 @@ struct RemindersSettingsView: View {
 
             if settings.isEnabled {
                 Section("Days") {
-                    HStack {
-                        ForEach(Weekday.allCases) { day in
-                            dayToggle(day)
-                        }
-                    }
-                    .padding(.vertical, 4)
+                    WeekdayTogglesRow(selection: $settings.days)
                 }
 
                 Section("Time") {
@@ -33,25 +28,6 @@ struct RemindersSettingsView: View {
         .navigationTitle("Reminders")
         .onChange(of: settings.isEnabled) { requestPermissionIfNeeded() }
         .onDisappear { persist() }
-    }
-
-    private func dayToggle(_ day: Weekday) -> some View {
-        let isOn = settings.days.contains(day)
-        return Button {
-            if isOn {
-                settings.days.remove(day)
-            } else {
-                settings.days.insert(day)
-            }
-        } label: {
-            Text(day.shortLabel.prefix(1))
-                .font(.caption.bold())
-                .frame(width: 32, height: 32)
-                .background(isOn ? Color.accentColor : Color.clear, in: Circle())
-                .foregroundStyle(isOn ? .white : .primary)
-                .overlay(Circle().strokeBorder(.quaternary))
-        }
-        .buttonStyle(.plain)
     }
 
     private var timeBinding: Binding<Date> {

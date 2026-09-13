@@ -6,10 +6,15 @@ A native iOS app (SwiftUI + SwiftData) for tracking your workout routine.
 
 - **Workout sessions** — build reusable routines (e.g. "Push Day", "Leg Day") from a
   built-in exercise library covering chest, back, legs, shoulders, arms, core and
-  cardio, or add your own custom exercises.
-- **Daily calendar** — a monthly calendar shows every day you worked out, with an
-  icon/color for which session you did that day. Tap a day to see (or delete) its
-  details.
+  cardio, or add your own custom exercises. Assign each session one or more days
+  of the week it's meant to happen on.
+- **Daily calendar** — a monthly calendar shows every day you worked out (filled,
+  colored dot) and every day with a session scheduled but not yet done (dashed
+  ring). Tap any day to see its details, delete a logged entry, or manually log a
+  workout you did outside the app's timer.
+- **iPhone Calendar sync** — optionally sync a session's scheduled days into a
+  dedicated "Workout Tracker" calendar in the iOS Calendar app via EventKit, so
+  your routine shows up alongside the rest of your schedule.
 - **Reminders** — pick the days of the week and a time, and the app schedules local
   notifications to nudge you to work out.
 - **Active workout timer** — start any session and the app walks you through each
@@ -27,18 +32,21 @@ WorkoutTracker/
 └── WorkoutTracker/
     ├── WorkoutTrackerApp.swift     App entry point, SwiftData container, notification setup
     ├── Models/                     Exercise, WorkoutSession, WorkoutLog, ReminderSettings
-    ├── Services/                   ExerciseLibrary, NotificationManager, WorkoutTimerManager
+    ├── Services/                   ExerciseLibrary, NotificationManager, WorkoutTimerManager, CalendarSyncManager
     ├── Views/                      All SwiftUI screens
-    └── Assets.xcassets             App icon slot + accent color
+    └── Assets.xcassets             App icon + accent color
 ```
 
 Data model:
-- `WorkoutSession` (SwiftData) — a reusable template: name, color, icon, and an
-  ordered list of exercises (sets/reps or sets/duration + rest).
+- `WorkoutSession` (SwiftData) — a reusable template: name, color, icon, an ordered
+  list of exercises (sets/reps or sets/duration + rest), which weekdays it's
+  scheduled for, and whether it syncs to the iOS Calendar.
 - `WorkoutLog` (SwiftData) — one row per completed day: which session, how long,
   how many exercises. This is what powers the calendar, streaks and stats.
 - `ReminderSettings` — stored in `UserDefaults`; drives scheduled local
   notifications via `UNUserNotificationCenter`.
+- `CalendarSyncManager` — wraps EventKit to create/update/remove a recurring
+  weekly event per session in a dedicated "Workout Tracker" calendar.
 
 ## Opening the project
 
@@ -57,6 +65,7 @@ built on SwiftUI, SwiftData, and UserNotifications from the standard SDK.
 
 - Local notifications require the user to grant permission; the app requests this
   automatically on first launch and again if you enable reminders.
+- Calendar sync requests write-only Calendar access (`NSCalendarsWriteOnlyAccessUsageDescription`)
+  the first time you enable it on a session — the app can add/update/remove its
+  own events but can't read your other calendar entries.
 - All data is stored on-device (SwiftData); there's no backend or account system.
-- The AppIcon slot is empty — drop your own 1024×1024 icon into
-  `Assets.xcassets/AppIcon.appiconset` before shipping.

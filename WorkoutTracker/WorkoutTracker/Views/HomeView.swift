@@ -15,6 +15,19 @@ struct HomeView: View {
         StreakCalculator.currentStreak(from: logs)
     }
 
+    private var todayWeekday: Weekday {
+        Weekday(rawValue: Calendar.current.component(.weekday, from: .now)) ?? .monday
+    }
+
+    private var orderedSessions: [WorkoutSession] {
+        sessions.sorted { lhs, rhs in
+            let lhsToday = lhs.scheduledDays.contains(todayWeekday)
+            let rhsToday = rhs.scheduledDays.contains(todayWeekday)
+            if lhsToday != rhsToday { return lhsToday }
+            return lhs.createdAt < rhs.createdAt
+        }
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -76,11 +89,11 @@ struct HomeView: View {
             if sessions.isEmpty {
                 emptyStateCard
             } else {
-                ForEach(sessions) { session in
+                ForEach(orderedSessions) { session in
                     Button {
                         sessionToStart = session
                     } label: {
-                        SessionRow(session: session)
+                        SessionRow(session: session, isScheduledToday: session.scheduledDays.contains(todayWeekday))
                     }
                     .buttonStyle(.plain)
                 }
@@ -116,6 +129,7 @@ struct HomeView: View {
 
 private struct SessionRow: View {
     let session: WorkoutSession
+    var isScheduledToday: Bool = false
 
     var body: some View {
         HStack(spacing: 14) {
@@ -126,7 +140,17 @@ private struct SessionRow: View {
                 .background(Color(hex: session.colorHex).opacity(0.15), in: Circle())
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(session.name).font(.body.bold())
+                HStack(spacing: 6) {
+                    Text(session.name).font(.body.bold())
+                    if isScheduledToday {
+                        Text("TODAY")
+                            .font(.caption2.bold())
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color(hex: session.colorHex), in: Capsule())
+                            .foregroundStyle(.white)
+                    }
+                }
                 Text("\(session.exercises.count) exercises · ~\(session.estimatedMinutes) min")
                     .font(.caption)
                     .foregroundStyle(.secondary)

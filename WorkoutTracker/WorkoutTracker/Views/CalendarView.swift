@@ -3,6 +3,7 @@ import SwiftData
 
 struct CalendarView: View {
     @Query(sort: \WorkoutLog.date) private var logs: [WorkoutLog]
+    @Query(sort: \WorkoutSession.createdAt) private var sessions: [WorkoutSession]
     @State private var displayedMonth: Date = Calendar.current.startOfDay(for: .now)
     @State private var selectedDay: Date?
 
@@ -10,6 +11,11 @@ struct CalendarView: View {
 
     private var logsByDay: [Date: WorkoutLog] {
         Dictionary(uniqueKeysWithValues: logs.map { (calendar.startOfDay(for: $0.date), $0) })
+    }
+
+    private func scheduledSession(for date: Date) -> WorkoutSession? {
+        guard let weekday = Weekday(rawValue: calendar.component(.weekday, from: date)) else { return nil }
+        return sessions.first { $0.scheduledDays.contains(weekday) }
     }
 
     private var daysInMonth: [Date?] {
@@ -50,7 +56,7 @@ struct CalendarView: View {
                 }
                 .padding(.horizontal)
 
-                if !logs.isEmpty {
+                if !logs.isEmpty || sessions.contains(where: { !$0.scheduledDays.isEmpty }) {
                     legend
                 }
 
@@ -81,6 +87,7 @@ struct CalendarView: View {
 
     private func dayCell(_ date: Date) -> some View {
         let log = logsByDay[calendar.startOfDay(for: date)]
+        let planned = log == nil ? scheduledSession(for: date) : nil
         let isToday = calendar.isDateInToday(date)
 
         return Button {
@@ -103,7 +110,12 @@ struct CalendarView: View {
                     .padding(2)
             )
             .overlay(
-                Circle().strokeBorder(isToday ? Color.accentColor : .clear, lineWidth: 1.5).padding(2)
+                Circle()
+                    .strokeBorder(
+                        planned != nil ? Color(hex: planned!.colorHex) : (isToday ? Color.accentColor : .clear),
+                        style: StrokeStyle(lineWidth: 1.5, dash: planned != nil ? [3, 3] : [])
+                    )
+                    .padding(2)
             )
         }
         .buttonStyle(.plain)
@@ -114,6 +126,12 @@ struct CalendarView: View {
             HStack(spacing: 4) {
                 Circle().fill(Color.accentColor).frame(width: 8, height: 8)
                 Text("Completed").font(.caption2).foregroundStyle(.secondary)
+            }
+            if sessions.contains(where: { !$0.scheduledDays.isEmpty }) {
+                HStack(spacing: 4) {
+                    Circle().strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.5, dash: [3, 3])).frame(width: 8, height: 8)
+                    Text("Planned").font(.caption2).foregroundStyle(.secondary)
+                }
             }
         }
     }

@@ -15,6 +15,7 @@
 		F65A6DC6FF76D68447EF9DC8 /* ExerciseLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37396F38728EB4C785963FC /* ExerciseLibrary.swift */; };
 		8CADC11ED6E4EF00C8C03CEF /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7F0ADEF7CB0B2D5220AA33 /* NotificationManager.swift */; };
 		44754481AA901057CC5DBE26 /* WorkoutTimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1010E3B985979D29A9F45 /* WorkoutTimerManager.swift */; };
+		A7C9E83A1CFBC5BF10E09DEE /* CalendarSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A995846921C11DB45C09969 /* CalendarSyncManager.swift */; };
 		97FF0842614AFE811CB98B82 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58033FCF7F57AF85C2DB60D /* RootView.swift */; };
 		26212DDC72A391DF832BD184 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76FA448272F3BCB03BCD6D0 /* HomeView.swift */; };
 		34F65615CCC05E505675F932 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC752EAC1F1508049A696EB2 /* Components.swift */; };
@@ -40,6 +41,7 @@
 		B37396F38728EB4C785963FC /* ExerciseLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseLibrary.swift; sourceTree = "<group>"; };
 		7E7F0ADEF7CB0B2D5220AA33 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		6ED1010E3B985979D29A9F45 /* WorkoutTimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimerManager.swift; sourceTree = "<group>"; };
+		2A995846921C11DB45C09969 /* CalendarSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarSyncManager.swift; sourceTree = "<group>"; };
 		D58033FCF7F57AF85C2DB60D /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		C76FA448272F3BCB03BCD6D0 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		EC752EAC1F1508049A696EB2 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				B37396F38728EB4C785963FC /* ExerciseLibrary.swift */,
 				7E7F0ADEF7CB0B2D5220AA33 /* NotificationManager.swift */,
 				6ED1010E3B985979D29A9F45 /* WorkoutTimerManager.swift */,
+				2A995846921C11DB45C09969 /* CalendarSyncManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -211,6 +214,7 @@
 				F65A6DC6FF76D68447EF9DC8 /* ExerciseLibrary.swift in Sources */,
 				8CADC11ED6E4EF00C8C03CEF /* NotificationManager.swift in Sources */,
 				44754481AA901057CC5DBE26 /* WorkoutTimerManager.swift in Sources */,
+				A7C9E83A1CFBC5BF10E09DEE /* CalendarSyncManager.swift in Sources */,
 				97FF0842614AFE811CB98B82 /* RootView.swift in Sources */,
 				26212DDC72A391DF832BD184 /* HomeView.swift in Sources */,
 				34F65615CCC05E505675F932 /* Components.swift in Sources */,
@@ -356,6 +360,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Workout Tracker";
+				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "Workout Tracker adds your scheduled workout sessions to a dedicated calendar.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -365,7 +370,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.workouttracker.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -385,6 +390,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Workout Tracker";
+				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "Workout Tracker adds your scheduled workout sessions to a dedicated calendar.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -394,7 +400,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.workouttracker.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

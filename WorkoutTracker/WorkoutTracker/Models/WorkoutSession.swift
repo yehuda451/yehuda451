@@ -23,6 +23,9 @@ final class WorkoutSession {
     var colorHex: String
     var createdAt: Date
     var exercisesData: Data
+    var scheduledDaysData: Data
+    var syncsToCalendar: Bool
+    var calendarEventIdentifier: String?
 
     var exercises: [SessionExercise] {
         get {
@@ -33,14 +36,28 @@ final class WorkoutSession {
         }
     }
 
-    init(name: String, symbolName: String = "figure.strengthtraining.traditional", colorHex: String = "3478F6", exercises: [SessionExercise] = []) {
+    /// Which days of the week this session is planned for (e.g. "Push Day" on Mon/Thu).
+    var scheduledDays: Set<Weekday> {
+        get {
+            (try? JSONDecoder().decode(Set<Weekday>.self, from: scheduledDaysData)) ?? []
+        }
+        set {
+            scheduledDaysData = (try? JSONEncoder().encode(newValue)) ?? Data()
+        }
+    }
+
+    init(name: String, symbolName: String = "figure.strengthtraining.traditional", colorHex: String = "3478F6", exercises: [SessionExercise] = [], scheduledDays: Set<Weekday> = []) {
         self.id = UUID()
         self.name = name
         self.symbolName = symbolName
         self.colorHex = colorHex
         self.createdAt = Date()
         self.exercisesData = Data()
+        self.scheduledDaysData = Data()
+        self.syncsToCalendar = false
+        self.calendarEventIdentifier = nil
         self.exercises = exercises
+        self.scheduledDays = scheduledDays
     }
 
     var estimatedMinutes: Int {

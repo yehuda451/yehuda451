@@ -29,6 +29,7 @@ struct SessionListView: View {
                             .buttonStyle(.plain)
                             .swipeActions(edge: .trailing) {
                                 Button(role: .destructive) {
+                                    CalendarSyncManager.shared.removeEvent(for: session)
                                     modelContext.delete(session)
                                 } label: {
                                     Label("Delete", systemImage: "trash")
@@ -79,12 +80,24 @@ struct SessionListView: View {
                 Text("\(session.exercises.count) exercises · ~\(session.estimatedMinutes) min")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                if !session.scheduledDays.isEmpty {
+                    Text(scheduleLabel(for: session))
+                        .font(.caption2)
+                        .foregroundStyle(Color(hex: session.colorHex))
+                }
             }
             Spacer()
             Image(systemName: "play.fill")
                 .foregroundStyle(.secondary)
         }
         .padding(.vertical, 4)
+    }
+
+    private func scheduleLabel(for session: WorkoutSession) -> String {
+        Weekday.allCases
+            .filter { session.scheduledDays.contains($0) }
+            .map { $0.shortLabel }
+            .joined(separator: ", ")
     }
 }
 

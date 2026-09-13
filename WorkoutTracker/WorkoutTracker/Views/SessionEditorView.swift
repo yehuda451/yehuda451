@@ -11,7 +11,10 @@ struct SessionEditorView: View {
     @State private var symbolName: String
     @State private var colorHex: String
     @State private var exercises: [SessionExercise]
+    @State private var scheduledDays: Set<Weekday>
+    @State private var syncsToCalendar: Bool
     @State private var isPresentingPicker = false
+    @State private var showsCalendarDeniedAlert = false
 
     init(session: WorkoutSession?) {
         self.session = session
@@ -19,6 +22,8 @@ struct SessionEditorView: View {
         _symbolName = State(initialValue: session?.symbolName ?? "figure.strengthtraining.traditional")
         _colorHex = State(initialValue: session?.colorHex ?? SessionColor.blue.rawValue)
         _exercises = State(initialValue: session?.exercises ?? [])
+        _scheduledDays = State(initialValue: session?.scheduledDays ?? [])
+        _syncsToCalendar = State(initialValue: session?.syncsToCalendar ?? false)
     }
 
     var body: some View {
@@ -45,6 +50,26 @@ struct SessionEditorView: View {
                         }
                     }
                     .padding(.vertical, 4)
+                }
+
+                Section("Scheduled Days") {
+                    WeekdayTogglesRow(selection: $scheduledDays, tint: Color(hex: colorHex))
+                }
+
+                Section {
+                    Toggle("Add to iPhone Calendar", isOn: $syncsToCalendar)
+                        .onChange(of: syncsToCalendar) { _, newValue in
+                            if newValue {
+                                CalendarSyncManager.shared.requestAccessIfNeeded { granted in
+                                    if !granted {
+                                        syncsToCalendar = false
+                                        showsCalendarDeniedAlert = true
+                                    }
+                                }
+                            }
+                        }
+                } footer: {
+                    Text("Creates a repeating event on this session's scheduled days in a \"Workout Tracker\" calendar.")
                 }
 
                 Section("Exercises (\(exercises.count))") {
@@ -78,6 +103,11 @@ struct SessionEditorView: View {
                 ExercisePickerView { picked in
                     add(picked)
                 }
+            }
+            .alert("Calendar Access Denied", isPresented: $showsCalendarDeniedAlert) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text("Enable Calendar access for Workout Tracker in Settings to sync this session.")
             }
         }
     }
@@ -151,15 +181,24 @@ struct SessionEditorView: View {
     }
 
     private func save() {
+        let target: WorkoutSession
         if let session {
             session.name = name
             session.symbolName = symbolName
             session.colorHex = colorHex
             session.exercises = exercises
+            session.scheduledDays = scheduledDays
+            session.syncsToCalendar = syncsToCalendar
+            target = session
         } else {
-            let newSession = WorkoutSession(name: name, symbolName: symbolName, colorHex: colorHex, exercises: exercises)
+            let newSession = WorkoutSession(name: name, symbolName: symbolName, colorHex: colorHex, exercises: exercises, scheduledDays: scheduledDays)
+            newSession.syncsToCalendar = syncsToCalendar
             modelContext.insert(newSession)
+            target = newSession
         }
+
+        let reminderTime = ReminderSettings.load()
+        CalendarSyncManager.shared.sync(session: target, hour: reminderTime.hour, minute: reminderTime.minute)
         dismiss()
     }
 }

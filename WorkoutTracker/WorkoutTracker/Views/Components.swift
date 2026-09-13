@@ -42,6 +42,37 @@ extension Color {
     }
 }
 
+/// A row of tappable day-of-week circles, shared by the reminders screen
+/// and the session editor's day scheduler.
+struct WeekdayTogglesRow: View {
+    @Binding var selection: Set<Weekday>
+    var tint: Color = .accentColor
+
+    var body: some View {
+        HStack {
+            ForEach(Weekday.allCases) { day in
+                let isOn = selection.contains(day)
+                Button {
+                    if isOn {
+                        selection.remove(day)
+                    } else {
+                        selection.insert(day)
+                    }
+                } label: {
+                    Text(day.shortLabel.prefix(1))
+                        .font(.caption.bold())
+                        .frame(width: 32, height: 32)
+                        .background(isOn ? tint : Color.clear, in: Circle())
+                        .foregroundStyle(isOn ? .white : .primary)
+                        .overlay(Circle().strokeBorder(.quaternary))
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.vertical, 4)
+    }
+}
+
 /// A curated palette so the session editor doesn't need a full color picker.
 enum SessionColor: String, CaseIterable, Identifiable {
     case blue = "3478F6"
