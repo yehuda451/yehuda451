@@ -60,10 +60,15 @@ struct SessionEditorView: View {
                     Toggle("Add to iPhone Calendar", isOn: $syncsToCalendar)
                         .onChange(of: syncsToCalendar) { _, newValue in
                             if newValue {
-                                CalendarSyncManager.shared.requestAccessIfNeeded { granted in
-                                    if !granted {
+                                CalendarSyncManager.shared.requestAccess { result in
+                                    switch result {
+                                    case .granted:
+                                        break
+                                    case .blocked:
                                         syncsToCalendar = false
                                         showsCalendarDeniedAlert = true
+                                    case .deniedNow:
+                                        syncsToCalendar = false
                                     }
                                 }
                             }

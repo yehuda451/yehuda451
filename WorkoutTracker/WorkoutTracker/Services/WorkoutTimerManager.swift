@@ -59,15 +59,19 @@ final class WorkoutTimerManager: ObservableObject {
         if secondsRemaining == 0 { secondsRemaining = currentPhaseDuration() }
         phaseEndDate = Date().addingTimeInterval(TimeInterval(secondsRemaining))
         isRunning = true
-        timerCancellable = Timer.publish(every: 1, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in self?.tick() }
+        restartTicking()
+        scheduleUpcomingNotification()
     }
 
     func pause() {
         secondsRemaining = max(0, Int(ceil(phaseEndDate.timeIntervalSinceNow)))
         isRunning = false
         timerCancellable?.cancel()
+        NotificationManager.shared.cancelPhaseEnd()
+    }
+
+    deinit {
+        NotificationManager.shared.cancelPhaseEnd()
     }
 
     func toggle() {
@@ -79,12 +83,25 @@ final class WorkoutTimerManager: ObservableObject {
         advance()
     }
 
-    /// Re-syncs the displayed countdown to the wall clock. Call this when
-    /// the app returns to the foreground so the display doesn't wait for the
-    /// next natural timer tick to catch up.
+    /// Re-syncs the displayed countdown to the wall clock and re-establishes
+    /// the periodic tick. Call this when the app returns to the foreground:
+    /// a suspended app gets no run-loop time at all, and a `Timer` scheduled
+    /// before suspension isn't guaranteed to resume firing reliably once the
+    /// app wakes back up, which otherwise leaves the countdown stuck at
+    /// whatever it last showed with no further cues or phase changes.
     func refresh() {
         guard isRunning else { return }
         tick()
+        if isRunning {
+            restartTicking()
+        }
+    }
+
+    private func restartTicking() {
+        timerCancellable?.cancel()
+        timerCancellable = Timer.publish(every: 1, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in self?.tick() }
     }
 
     private func tick() {
@@ -119,6 +136,32 @@ final class WorkoutTimerManager: ObservableObject {
     private func setPhaseDuration(_ duration: Int) {
         secondsRemaining = duration
         phaseEndDate = Date().addingTimeInterval(TimeInterval(duration))
+        if isRunning {
+            scheduleUpcomingNotification()
+        }
+    }
+
+    /// Schedules a local notification for when the current phase ends, so
+    /// you're told even if you're still in another app when it happens.
+    private func scheduleUpcomingNotification() {
+        guard let exercise = currentExercise else {
+            NotificationManager.shared.cancelPhaseEnd()
+            return
+        }
+        let title: String
+        let body: String
+        switch phase {
+        case .work:
+            title = "Work interval done"
+            body = exercise.restSeconds > 0 ? "Rest time" : "Next set — \(exercise.exerciseName)"
+        case .rest:
+            title = "Rest over"
+            body = "Back to \(exercise.exerciseName)"
+        case .finished:
+            NotificationManager.shared.cancelPhaseEnd()
+            return
+        }
+        NotificationManager.shared.schedulePhaseEnd(in: secondsRemaining, title: title, body: body)
     }
 
     /// Moves from work -> rest -> next set -> next exercise -> finished.
@@ -167,6 +210,7 @@ final class WorkoutTimerManager: ObservableObject {
         phase = .finished
         isRunning = false
         timerCancellable?.cancel()
+        NotificationManager.shared.cancelPhaseEnd()
         UINotificationFeedbackGenerator().notificationOccurred(.success)
     }
 

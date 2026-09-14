@@ -10,9 +10,30 @@ final class CalendarSyncManager {
 
     private init() {}
 
-    func requestAccessIfNeeded(completion: @escaping (Bool) -> Void) {
-        store.requestWriteOnlyAccessToEvents { granted, _ in
-            DispatchQueue.main.async { completion(granted) }
+    enum AccessResult {
+        /// Granted just now, or already granted from an earlier request.
+        case granted
+        /// Already denied/restricted from a previous decision — the system
+        /// won't show the prompt again; the user has to flip it on manually.
+        case blocked
+        /// The system prompt was shown just now and the user declined it.
+        case deniedNow
+    }
+
+    func requestAccess(completion: @escaping (AccessResult) -> Void) {
+        switch EKEventStore.authorizationStatus(for: .event) {
+        case .fullAccess, .writeOnly:
+            completion(.granted)
+        case .restricted, .denied:
+            completion(.blocked)
+        case .notDetermined:
+            store.requestWriteOnlyAccessToEvents { granted, _ in
+                DispatchQueue.main.async {
+                    completion(granted ? .granted : .deniedNow)
+                }
+            }
+        @unknown default:
+            completion(.deniedNow)
         }
     }
 

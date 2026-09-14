@@ -54,4 +54,28 @@ final class NotificationManager {
         let identifiers = Weekday.allCases.map { identifierPrefix + "\($0.rawValue)" }
         center.removePendingNotificationRequests(withIdentifiers: identifiers)
     }
+
+    private let phaseEndIdentifier = "workout-phase-end"
+
+    /// Schedules a one-off local notification to fire when the current
+    /// work/rest phase ends, so you're told even if you've switched to
+    /// another app (e.g. to pick a song) and haven't come back yet.
+    func schedulePhaseEnd(in seconds: Int, title: String, body: String) {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: [phaseEndIdentifier])
+        guard seconds > 0 else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = .default
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(seconds), repeats: false)
+        let request = UNNotificationRequest(identifier: phaseEndIdentifier, content: content, trigger: trigger)
+        center.add(request)
+    }
+
+    func cancelPhaseEnd() {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [phaseEndIdentifier])
+    }
 }
