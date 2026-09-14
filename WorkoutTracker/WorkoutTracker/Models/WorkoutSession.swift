@@ -22,10 +22,10 @@ final class WorkoutSession {
     var symbolName: String
     var colorHex: String
     var createdAt: Date
-    var exercisesData: Data
-    var scheduledDaysData: Data
-    var syncsToCalendar: Bool
-    var calendarEventIdentifier: String?
+    var exercisesData: Data = Data()
+    var scheduledDaysData: Data = Data()
+    var syncsToCalendar: Bool = false
+    var calendarEventIdentifier: String? = nil
 
     var exercises: [SessionExercise] {
         get {
