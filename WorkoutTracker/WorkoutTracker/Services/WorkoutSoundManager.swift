@@ -10,11 +10,11 @@ final class WorkoutSoundManager {
 
     private var tickPlayer: AVAudioPlayer?
     private var chimePlayer: AVAudioPlayer?
-    private var sessionIsActive = false
 
     private init() {
         tickPlayer = Self.loadPlayer(named: "tick")
         chimePlayer = Self.loadPlayer(named: "chime")
+        configureAudioSession()
     }
 
     private static func loadPlayer(named name: String) -> AVAudioPlayer? {
@@ -24,24 +24,23 @@ final class WorkoutSoundManager {
         return player
     }
 
-    private func activateSessionIfNeeded() {
-        guard !sessionIsActive else { return }
+    /// `.mixWithOthers` is what keeps another app's music playing instead of
+    /// being stopped; done once, up front, rather than lazily right before a
+    /// sound plays, so there's no race with music that's already active.
+    private func configureAudioSession() {
         let session = AVAudioSession.sharedInstance()
-        try? session.setCategory(.playback, options: [.mixWithOthers, .duckOthers])
+        try? session.setCategory(.playback, options: [.mixWithOthers])
         try? session.setActive(true)
-        sessionIsActive = true
     }
 
     /// A short beep for each of the final seconds of a work/rest period.
     func playTick() {
-        activateSessionIfNeeded()
         tickPlayer?.currentTime = 0
         tickPlayer?.play()
     }
 
     /// A distinct chime marking a work/rest transition, a new set, or a new exercise.
     func playChime() {
-        activateSessionIfNeeded()
         chimePlayer?.currentTime = 0
         chimePlayer?.play()
     }

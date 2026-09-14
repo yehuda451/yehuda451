@@ -31,6 +31,10 @@ struct WorkoutTrackerApp: App {
                 NotificationManager.shared.reschedule(with: ReminderSettings.load())
             }
         }
+        // Configures the shared audio session up front so workout sound cues
+        // mix with any music already playing instead of racing to set it up
+        // mid-workout.
+        _ = WorkoutSoundManager.shared
     }
 
     var body: some Scene {

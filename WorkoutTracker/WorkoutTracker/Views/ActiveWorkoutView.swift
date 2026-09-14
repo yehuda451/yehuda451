@@ -4,6 +4,7 @@ import SwiftData
 struct ActiveWorkoutView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) private var scenePhase
 
     let session: WorkoutSession
     @StateObject private var timer: WorkoutTimerManager
@@ -42,6 +43,11 @@ struct ActiveWorkoutView: View {
                 Button("Cancel", role: .cancel) {}
             }
             .onAppear { timer.start() }
+            .onChange(of: scenePhase) { _, newPhase in
+                if newPhase == .active {
+                    timer.refresh()
+                }
+            }
         }
         .interactiveDismissDisabled()
     }
