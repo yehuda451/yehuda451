@@ -16,6 +16,7 @@
 		8CADC11ED6E4EF00C8C03CEF /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7F0ADEF7CB0B2D5220AA33 /* NotificationManager.swift */; };
 		44754481AA901057CC5DBE26 /* WorkoutTimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1010E3B985979D29A9F45 /* WorkoutTimerManager.swift */; };
 		A7C9E83A1CFBC5BF10E09DEE /* CalendarSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A995846921C11DB45C09969 /* CalendarSyncManager.swift */; };
+		A7C3F7EFDD62CCF425856777 /* WorkoutSoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F19CCE34AEA147FE328D08 /* WorkoutSoundManager.swift */; };
 		97FF0842614AFE811CB98B82 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58033FCF7F57AF85C2DB60D /* RootView.swift */; };
 		26212DDC72A391DF832BD184 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76FA448272F3BCB03BCD6D0 /* HomeView.swift */; };
 		34F65615CCC05E505675F932 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC752EAC1F1508049A696EB2 /* Components.swift */; };
@@ -28,6 +29,8 @@
 		A67B6B88180C0309264B774A /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F44147EDD10966C8B08CAAC /* StatsView.swift */; };
 		E5CCCCBF590C1606BFD2B3D1 /* RemindersSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49ACCE178EF8FB6697D7A991 /* RemindersSettingsView.swift */; };
 		CDA93FBE67D957786791CD49 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B57234BC3AF05E8362DBF10 /* SettingsView.swift */; };
+		7E61E9F0759B7152090BB701 /* tick.wav in Resources */ = {isa = PBXBuildFile; fileRef = 972D35BFA861A31C1B530570 /* tick.wav */; };
+		7811F30855E0AF81ED2F6867 /* chime.wav in Resources */ = {isa = PBXBuildFile; fileRef = 22D12CCF242D6E2AE6EA803C /* chime.wav */; };
 		5EDAFE11D3087DE621FCCA45 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD381624E89BEA467A3F6BF0 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +45,7 @@
 		7E7F0ADEF7CB0B2D5220AA33 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		6ED1010E3B985979D29A9F45 /* WorkoutTimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimerManager.swift; sourceTree = "<group>"; };
 		2A995846921C11DB45C09969 /* CalendarSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarSyncManager.swift; sourceTree = "<group>"; };
+		F3F19CCE34AEA147FE328D08 /* WorkoutSoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSoundManager.swift; sourceTree = "<group>"; };
 		D58033FCF7F57AF85C2DB60D /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		C76FA448272F3BCB03BCD6D0 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		EC752EAC1F1508049A696EB2 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
@@ -54,6 +58,8 @@
 		1F44147EDD10966C8B08CAAC /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		49ACCE178EF8FB6697D7A991 /* RemindersSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersSettingsView.swift; sourceTree = "<group>"; };
 		0B57234BC3AF05E8362DBF10 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		972D35BFA861A31C1B530570 /* tick.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = tick.wav; sourceTree = "<group>"; };
+		22D12CCF242D6E2AE6EA803C /* chime.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = chime.wav; sourceTree = "<group>"; };
 		FD381624E89BEA467A3F6BF0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -91,6 +97,7 @@
 				0BAE3B150B8EC55F3FAF0C01 /* Models */,
 				EBEF7C92E047BC8F73206D87 /* Services */,
 				27E84255ED83F111C48120AC /* Views */,
+				4E5384CA3E4FBE0F98F9BC78 /* Sounds */,
 				FD381624E89BEA467A3F6BF0 /* Assets.xcassets */,
 			);
 			path = WorkoutTracker;
@@ -114,6 +121,7 @@
 				7E7F0ADEF7CB0B2D5220AA33 /* NotificationManager.swift */,
 				6ED1010E3B985979D29A9F45 /* WorkoutTimerManager.swift */,
 				2A995846921C11DB45C09969 /* CalendarSyncManager.swift */,
+				F3F19CCE34AEA147FE328D08 /* WorkoutSoundManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -135,6 +143,15 @@
 				0B57234BC3AF05E8362DBF10 /* SettingsView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		4E5384CA3E4FBE0F98F9BC78 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				972D35BFA861A31C1B530570 /* tick.wav */,
+				22D12CCF242D6E2AE6EA803C /* chime.wav */,
+			);
+			path = Sounds;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,6 +212,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E61E9F0759B7152090BB701 /* tick.wav in Resources */,
+				7811F30855E0AF81ED2F6867 /* chime.wav in Resources */,
 				5EDAFE11D3087DE621FCCA45 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -215,6 +234,7 @@
 				8CADC11ED6E4EF00C8C03CEF /* NotificationManager.swift in Sources */,
 				44754481AA901057CC5DBE26 /* WorkoutTimerManager.swift in Sources */,
 				A7C9E83A1CFBC5BF10E09DEE /* CalendarSyncManager.swift in Sources */,
+				A7C3F7EFDD62CCF425856777 /* WorkoutSoundManager.swift in Sources */,
 				97FF0842614AFE811CB98B82 /* RootView.swift in Sources */,
 				26212DDC72A391DF832BD184 /* HomeView.swift in Sources */,
 				34F65615CCC05E505675F932 /* Components.swift in Sources */,

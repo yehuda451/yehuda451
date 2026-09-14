@@ -1,6 +1,5 @@
 import Foundation
 import Combine
-import AudioToolbox
 import UIKit
 
 enum WorkoutPhase {
@@ -66,6 +65,9 @@ final class WorkoutTimerManager: ObservableObject {
         advance()
     }
 
+    /// How many of the final seconds of a phase get a countdown beep.
+    private let countdownWindow = 3
+
     private func tick() {
         guard secondsRemaining > 0 else {
             advance()
@@ -74,6 +76,9 @@ final class WorkoutTimerManager: ObservableObject {
         secondsRemaining -= 1
         if secondsRemaining == 0 {
             advance()
+        } else if secondsRemaining <= countdownWindow {
+            WorkoutSoundManager.shared.playTick()
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
         }
     }
 
@@ -97,7 +102,7 @@ final class WorkoutTimerManager: ObservableObject {
         }
 
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        AudioServicesPlaySystemSound(1057)
+        WorkoutSoundManager.shared.playChime()
 
         switch phase {
         case .work:

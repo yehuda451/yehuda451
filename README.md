@@ -19,7 +19,10 @@ A native iOS app (SwiftUI + SwiftData) for tracking your workout routine.
   notifications to nudge you to work out.
 - **Active workout timer** — start any session and the app walks you through each
   exercise: a countdown ring for work and rest periods, automatic set/exercise
-  progression, haptic + sound cues on every transition, pause/skip controls.
+  progression, pause/skip controls, and audio + haptic cues so you don't need to
+  watch the screen — a tick for each of the final 3 seconds of work/rest, and a
+  distinct chime on every transition. Cues mix with music/podcasts already
+  playing and work even if the phone is muted.
 - **Stats & streaks** — current streak, best streak, total workouts, total minutes,
   favorite session, and a 12-week bar chart of workout frequency.
 - **Home tab** — today's plan, a week-at-a-glance strip, and a quick-start button.
@@ -32,8 +35,9 @@ WorkoutTracker/
 └── WorkoutTracker/
     ├── WorkoutTrackerApp.swift     App entry point, SwiftData container, notification setup
     ├── Models/                     Exercise, WorkoutSession, WorkoutLog, ReminderSettings
-    ├── Services/                   ExerciseLibrary, NotificationManager, WorkoutTimerManager, CalendarSyncManager
+    ├── Services/                   ExerciseLibrary, NotificationManager, WorkoutTimerManager, CalendarSyncManager, WorkoutSoundManager
     ├── Views/                      All SwiftUI screens
+    ├── Sounds/                     tick.wav, chime.wav — countdown/transition audio cues
     └── Assets.xcassets             App icon + accent color
 ```
 
