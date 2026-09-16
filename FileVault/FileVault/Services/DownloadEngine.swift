@@ -81,8 +81,8 @@ final class DownloadEngine: NSObject, ObservableObject {
     func pause(_ item: DownloadItem) {
         guard let task = tasksByItemID[item.id] else { return }
         task.cancel { [weak self] resumeData in
+            guard let self else { return }
             Task { @MainActor in
-                guard let self else { return }
                 self.resumeDataByItemID[item.id] = resumeData
                 self.updateItem(item.id) { $0.status = .paused }
                 self.tasksByItemID.removeValue(forKey: item.id)
@@ -237,13 +237,14 @@ extension DownloadEngine: URLSessionDownloadDelegate {
         guard let destination = registry.destination(for: taskIdentifier) else { return }
 
         let fileManager = FileManager.default
-        var moveError: Error?
+        let moveError: Error?
         do {
             try fileManager.createDirectory(at: destination.deletingLastPathComponent(), withIntermediateDirectories: true)
             if fileManager.fileExists(atPath: destination.path) {
                 try fileManager.removeItem(at: destination)
             }
             try fileManager.moveItem(at: location, to: destination)
+            moveError = nil
         } catch {
             moveError = error
         }
