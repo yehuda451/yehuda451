@@ -188,7 +188,7 @@ private struct WebViewContainer: UIViewRepresentable {
             if !navigationResponse.canShowMIMEType {
                 decisionHandler(.cancel)
                 let suggestedName = navigationResponse.response.suggestedFilename
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     DownloadEngine.shared.startDownload(from: url, suggestedName: suggestedName)
                 }
                 return

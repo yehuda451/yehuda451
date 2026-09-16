@@ -49,6 +49,7 @@ struct AddDownloadSheet: View {
         }
     }
 
+    @MainActor
     private func startDownload() {
         let trimmed = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
         guard let url = URL(string: trimmed), url.scheme?.hasPrefix("http") == true else {

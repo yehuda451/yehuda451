@@ -1,4 +1,5 @@
 import SwiftUI
+import QuickLook
 
 struct DownloadsView: View {
     @ObservedObject private var engine = DownloadEngine.shared

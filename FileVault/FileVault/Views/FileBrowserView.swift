@@ -1,4 +1,5 @@
 import SwiftUI
+import QuickLook
 
 private enum BrowserViewMode: String {
     case list, grid
