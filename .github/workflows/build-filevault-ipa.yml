@@ -1,0 +1,57 @@
+name: Build FileVault Unsigned IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - claude/iphone-download-manager-uv29i8
+    paths:
+      - "FileVault/**"
+      - ".github/workflows/build-filevault-ipa.yml"
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show available Xcode versions
+        run: ls /Applications | grep Xcode || true
+
+      - name: Build unsigned archive
+        run: |
+          xcodebuild \
+            -project FileVault/FileVault.xcodeproj \
+            -scheme FileVault \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath "$PWD/build/FileVault.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            AD_HOC_CODE_SIGNING_ALLOWED=YES \
+            archive
+
+      - name: Package IPA (Payload/*.app zipped)
+        run: |
+          set -e
+          APP_PATH="build/FileVault.xcarchive/Products/Applications/FileVault.app"
+          if [ ! -d "$APP_PATH" ]; then
+            echo "Build did not produce an .app bundle at $APP_PATH"
+            find build -maxdepth 4
+            exit 1
+          fi
+          mkdir -p build/Payload
+          cp -R "$APP_PATH" build/Payload/
+          cd build
+          zip -r FileVault.ipa Payload
+          cd ..
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FileVault-unsigned-ipa
+          path: build/FileVault.ipa
+          retention-days: 14
